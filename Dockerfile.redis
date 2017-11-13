@@ -1,0 +1,27 @@
+FROM alpine:edge
+
+MAINTAINER Joseph Stowe
+
+RUN mkdir /src
+WORKDIR /src
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apk add --update supervisor ruby ruby-dev redis  && gem install --no-ri --no-rdoc redis
+
+COPY ./data/redis-cluster/redis-trib.rb /usr/bin/redis-trib.rb
+
+COPY ./data/redis-cluster/redis.ini /etc/supervisor.d/redis.ini
+
+COPY ./data/redis-cluster/redis-start-cluster.sh  /bin/redis-start-cluster.sh
+
+VOLUME /src/redis-master-1
+VOLUME /src/redis-master-2
+VOLUME /src/redis-master-3
+VOLUME /src/redis-replica-1
+VOLUME /src/redis-replica-2
+VOLUME /src/redis-replica-3
+
+RUN chmod +x /bin/redis-start-cluster.sh
+
+CMD . /bin/redis-start-cluster.sh

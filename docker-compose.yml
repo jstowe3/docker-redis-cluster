@@ -1,0 +1,25 @@
+version: "2"
+services:
+  redis:
+    image: local-redis-cluster:latest
+    container_name: local-redis-cluster
+    ports:
+      - "7000:6379"
+      - "7001:6380"
+      - "7002:6381"
+      - "7003:6382"
+      - "7004:6383"
+      - "7005:6384"
+    volumes:
+      - ./data/redis-cluster/redis-master-1:/src/redis-master-1
+      - ./data/redis-cluster/redis-master-2:/src/redis-master-2
+      - ./data/redis-cluster/redis-master-3:/src/redis-master-3
+      - ./data/redis-cluster/redis-replica-1:/src/redis-replica-1
+      - ./data/redis-cluster/redis-replica-2:/src/redis-replica-2
+      - ./data/redis-cluster/redis-replica-3:/src/redis-replica-3
+    networks:
+      webnet:
+        ipv4_address: 172.19.0.8
+networks:
+  webnet:
+    external: true
